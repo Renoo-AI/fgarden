@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlourGarden | 2026 Artisan Collective</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-pink: #FDF4F4;
+            --color-cream: #FCFAF7;
+            --color-sage: #EBEEE5;
+            --color-text: #1A1817; 
+            --color-text-muted: #5E5852;
+            --color-white: #FFFFFF;
+            --color-accent: #8E7B6D;
+
+            --font-display: 'Instrument Serif', serif;
+            --font-body: 'Inter Tight', sans-serif;
+            
+            --sp-section: clamp(5rem, 15vw, 12rem);
+            --container-padding: clamp(1.5rem, 5vw, 5rem);
+            --transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            --radius-arch: 500px 500px 0 0;
+            --radius-organic: 120px 20px 120px 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: var(--font-body); 
+            background-color: var(--color-cream); 
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.1; }
+        .hero-title { font-size: clamp(3.2rem, 10vw, 8.5rem); letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+        .hero-title i { font-style: italic; }
+        .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--color-accent); margin-bottom: 1.5rem; display: block; }
+
+        /* Navigation */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            padding: 1.5rem 0;
+            transition: var(--transition);
+        }
+        header.scrolled {
+            background: rgba(252, 250, 247, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-container {
+            max-width: 1600px; margin: 0 auto; padding: 0 var(--container-padding);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-family: var(--font-display); font-size: clamp(1.4rem, 4vw, 1.8rem); text-decoration: none; color: var(--color-text); font-weight: 500; z-index: 3000; }
+        
+        .nav-links { display: flex; gap: 3rem; list-style: none; }
+        .nav-links a { 
+            text-decoration: none; color: var(--color-text); font-size: 0.75rem; 
+            text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; transition: 0.3s; 
+        }
+        .nav-links a:hover { opacity: 1; color: var(--color-accent); }
+
+        /* Mobile Menu UI */
+        .mobile-toggle { 
+            display: none; width: 40px; height: 40px; 
+            flex-direction: column; justify-content: center; gap: 6px;
+            cursor: pointer; z-index: 3000; border: none; background: none;
+        }
+        .mobile-toggle span { width: 100%; height: 1px; background: var(--color-text); transition: 0.4s; }
+        .menu-open .mobile-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-open .mobile-toggle span:nth-child(2) { transform: translateY(-0px) rotate(-45deg); }
+
+        .mobile-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--color-cream); z-index: 2500;
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 0 var(--container-padding);
+            transform: translateY(-100%); transition: var(--transition); opacity: 0;
+        }
+        .menu-open .mobile-overlay { transform: translateY(0); opacity: 1; }
+        .mobile-nav { list-style: none; }
+        .mobile-nav li { margin-bottom: 2rem; overflow: hidden; }
+        .mobile-nav a { 
+            font-family: var(--font-display); font-size: 3.5rem; 
+            text-decoration: none; color: var(--color-text); display: block;
+            transform: translateY(100%); transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .menu-open .mobile-nav a { transform: translateY(0); }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            padding: 140px var(--container-padding) 60px;
+            gap: 4rem;
+        }
+        .hero-img-container {
+            width: 100%; height: 80vh;
+            border-radius: var(--radius-arch);
+            overflow: hidden;
+        }
+        .hero-img-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Cards */
+        .collection { padding: var(--sp-section) var(--container-padding); }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(2rem, 4vw, 4rem); }
+        .card-img-frame { aspect-ratio: 0.85; overflow: hidden; margin-bottom: 2rem; transition: var(--transition); }
+        .shape-arch { border-radius: 200px 200px 0 0; }
+        .shape-organic { border-radius: var(--radius-organic); }
+        .shape-circle { border-radius: 50%; aspect-ratio: 1; width: 90%; margin: 0 auto 2rem; }
+        .card img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s; }
+        .card:hover img { transform: scale(1.08); }
+
+        /* Buttons */
+        .btn {
+            padding: 1.2rem 3rem; text-transform: uppercase; font-size: 0.75rem;
+            letter-spacing: 0.2em; text-decoration: none; display: inline-block;
+            transition: var(--transition); border-radius: 100px; text-align: center;
+        }
+        .btn-dark { background: var(--color-text); color: var(--color-white); border: 1px solid var(--color-text); }
+        .btn-dark:hover { background: transparent; color: var(--color-text); }
+
+        /* Story */
+        .story { 
+            background: var(--color-pink); 
+            padding: var(--sp-section) var(--container-padding);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+        }
+        .story-img { border-radius: 0 400px 400px 0; overflow: hidden; height: 75vh; }
+        .story-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Form */
+        .order-container { padding: var(--sp-section) var(--container-padding); }
+        .form-card { 
+            background: var(--color-white); max-width: 1000px; margin: 0 auto;
+            padding: clamp(2.5rem, 8vw, 6rem); border-radius: var(--radius-organic);
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.04);
+        }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        input, textarea {
+            width: 100%; border: none; border-bottom: 1px solid #E5E0DA;
+            padding: 1.5rem 0; font-family: inherit; font-size: 1.1rem;
+            background: transparent; margin-bottom: 2rem; outline: none; transition: 0.3s;
+        }
+        input:focus { border-bottom-color: var(--color-accent); }
+
+        footer { padding: 6rem var(--container-padding) 3rem; background: var(--color-text); color: var(--color-white); text-align: center; }
+
+        /* MOBILE FIXES (Phone/Tablet) */
+        @media (max-width: 1024px) {
+            .hero { grid-template-columns: 1fr; padding-top: 120px; text-align: center; gap: 3rem; }
+            .hero-text { max-width: 100%; }
+            .hero-img-container { height: 50vh; width: 100%; order: 2; }
+            .grid-3 { grid-template-columns: 1fr; gap: 5rem; }
+            .nav-links { display: none; }
+            .mobile-toggle { display: flex; }
+            .story { grid-template-columns: 1fr; text-align: center; gap: 3rem; padding-left: 0; padding-right: 0; }
+            .story-text { padding: 0 var(--container-padding); }
+            .story-img { width: 100%; height: 45vh; border-radius: 0 100px 100px 0; }
+            .input-row { grid-template-columns: 1fr; gap: 0; }
+            .btn { width: 100%; } /* Full width buttons on mobile are better for UX */
+        }
+
+        /* Reveal Animation */
+        [data-reveal] { opacity: 0; transform: translateY(30px); transition: 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        [data-reveal].active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body id="body">
+
+    <header id="header">
+        <div class="nav-container">
+            <a href="#" class="logo">FlourGarden</a>
+            
+            <ul class="nav-links">
+                <li><a href="#collections">Collections</a></li>
+                <li><a href="#story">Philosophy</a></li>
+                <li><a href="#order">Commission</a></li>
+            </ul>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="nav-cta" style="display: flex;">
+                    <a href="#order" class="btn btn-dark" style="padding: 0.7rem 1.4rem; font-size: 0.6rem;">Inquire</a>
+                </div>
+                <button class="mobile-toggle" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay">
+        <ul class="mobile-nav">
+            <li><a href="#collections" onclick="toggleMenu()">The Archive</a></li>
+            <li><a href="#story" onclick="toggleMenu()">Philosophy</a></li>
+            <li><a href="#order" onclick="toggleMenu()">Commission</a></li>
+        </ul>
+        <div style="margin-top: 4rem;">
+            <p class="section-label">Studio Location</p>
+            <p style="font-size: 1rem;">Rue de la Paix, 2026</p>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-text" data-reveal>
+                <span class="section-label">Est. 2026 — Artisan Atelier</span>
+                <h1 class="hero-title">Poetic <br>Pastry <i>for</i> <br>Modernity</h1>
+                <p style="color: var(--color-text-muted); font-size: 1.1rem; margin: 2rem 0 3rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    Bespoke sugar sculptures and artisan macarons designed for moments of absolute stillness.
+                </p>
+                <a href="#order" class="btn btn-dark">Start The Commission</a>
+            </div>
+            <div class="hero-img-container" data-reveal>
+                <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&q=80&w=1200" alt="FlourGarden Concept">
+            </div>
+        </section>
+
+        <!-- Collection -->
+        <section id="collections" class="collection">
+            <div style="text-align: center; margin-bottom: clamp(4rem, 10vw, 6rem);" data-reveal>
+                <span class="section-label">The Archive</span>
+                <h2 style="font-size: clamp(3rem, 6vw, 5rem);">Botanical Specimens</h2>
+            </div>
+            
+            <div class="grid-3">
+                <div class="card" data-reveal>
+                    <div class="card-img-frame shape-arch">
+                        <img src="https://images.unsplash.com/photo-1569864358642-9d16197fe9aa?auto=format&fit=crop&q=80&w=800" alt="Macaron Specimen">
+                    </div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Wildflower Shells</h3>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem;">Hand-painted botanical portraits on organic lavender shells.</p>
+                </div>
+
+                <div class="card" data-reveal>
+                    <div class="card-img-frame shape-circle">
+                        <img src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?auto=format&fit=crop&q=80&w=800" alt="Sugar Sculpture">
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Sugar Mimicry</h3>
+                        <p style="color: var(--color-text-muted); font-size: 0.95rem;">Hyper-realistic modeling paste florals for archival cakes.</p>
+                    </div>
+                </div>
+
+                <div class="card" data-reveal>
+                    <div class="card-img-frame shape-organic">
+                        <img src="https://images.unsplash.com/photo-1464305795204-6f5bdee73271?auto=format&fit=crop&q=80&w=800" alt="Event Set">
+                    </div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Grand Installations</h3>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem;">Immersive dessert tables designed as architectural landscapes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story -->
+        <section id="story" class="story">
+            <div class="story-img" data-reveal>
+                <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=1200" alt="Our Process">
+            </div>
+            <div class="story-text" data-reveal>
+                <span class="section-label">Our Philosophy</span>
+                <h2 style="font-size: clamp(3rem, 6vw, 4.5rem); margin-bottom: 2rem;">A Dialogue <br>between Art <br>and Flour</h2>
+                <p style="font-size: 1.1rem; color: var(--color-text-muted); margin-bottom: 3rem;">
+                    We reject the mass-produced. Every piece that leaves our studio is a unique commission, honoring traditional French pastry techniques.
+                </p>
+                <a href="#order" class="btn btn-dark">Our Process</a>
+            </div>
+        </section>
+
+        <!-- Form -->
+        <section id="order" class="order-container">
+            <div class="form-card" data-reveal>
+                <div style="text-align: center; margin-bottom: 4rem;">
+                    <span class="section-label">Contact</span>
+                    <h2 style="font-size: clamp(2.5rem, 6vw, 4rem);">The Commission</h2>
+                    <p style="color: var(--color-text-muted); margin-top: 1rem;">Limited to 4 bespoke commissions per week.</p>
+                </div>
+                <form onsubmit="event.preventDefault(); this.innerHTML='<h2 style=\'font-family:var(--font-display); font-size:3rem;\'>Inquiry Received.</h2><p>Our concierge will reach out shortly.</p>';">
+                    <div class="input-row">
+                        <input type="text" placeholder="Full Name" required>
+                        <input type="email" placeholder="Email Address" required>
+                    </div>
+                    <input type="text" placeholder="Event Date & Location">
+                    <textarea rows="3" placeholder="Tell us about your celebration's narrative..."></textarea>
+                    <button type="submit" class="btn btn-dark" style="width: 100%;">Submit Inquiry</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="nav-container" style="flex-direction: column; gap: 3rem; align-items: center;">
+            <a href="#" class="logo" style="color: white; font-size: 3rem;">FlourGarden</a>
+            <div style="display: flex; gap: 2rem; justify-content: center;">
+                <a href="#" style="color: white; text-decoration: none; font-size: 0.7rem; opacity: 0.6; letter-spacing: 0.1em;">Instagram</a>
+                <a href="#" style="color: white; text-decoration: none; font-size: 0.7rem; opacity: 0.6; letter-spacing: 0.1em;">Journal</a>
+            </div>
+            <p style="font-size: 0.65rem; opacity: 0.4; letter-spacing: 0.2em;">&copy; 2026 FLOURGARDEN STUDIO.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Menu Toggle
+        function toggleMenu() {
+            document.getElementById('body').classList.toggle('menu-open');
+        }
+
+        // Header Scroll Effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Reveal Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
